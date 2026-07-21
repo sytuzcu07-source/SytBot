@@ -100,7 +100,6 @@
             font-size: 13px;
         }
 
-        /* Profil ve Gmail Butonları Bölümü */
         .sidebar-menu {
             display: flex;
             flex-direction: column;
@@ -167,7 +166,6 @@
             background: var(--border-color);
         }
 
-        /* İçerik Ekranları (Sohbet / Profil / Gmail) */
         .content-area {
             flex: 1;
             display: flex;
@@ -192,7 +190,6 @@
             flex-direction: column;
         }
 
-        /* Mesaj Akışı */
         .chat-messages {
             flex: 1;
             padding: 20px;
@@ -259,7 +256,6 @@
             margin-top: 8px;
         }
 
-        /* Karşılama Ekranı */
         .welcome-screen {
             display: flex;
             flex-direction: column;
@@ -300,7 +296,6 @@
             background: var(--border-color);
         }
 
-        /* Profil ve Gmail Panelleri Tasarımı */
         .panel-card {
             background: var(--sidebar-bg);
             border: 1px solid var(--border-color);
@@ -348,7 +343,6 @@
             font-size: 14px;
         }
 
-        /* Alt Girdi (Input) Paneli */
         .input-container {
             padding: 20px;
             max-width: 800px;
@@ -407,7 +401,6 @@
 </head>
 <body>
 
-    <!-- Yan Menü -->
     <div class="sidebar">
         <div class="top-sidebar">
             <button class="new-chat-btn" onclick="switchView('chat')">
@@ -431,11 +424,10 @@
         </div>
         
         <div style="font-size: 11px; color: var(--subtext-color); text-align: center;" id="uiFooter">
-            SytBot AI v3.0 Stüdyo
+            SytBot AI v3.1 Stüdyo
         </div>
     </div>
 
-    <!-- Ana Ekran Alanı -->
     <div class="main-chat">
         <div class="chat-header">
             <span id="uiHeaderTitle">SytBot AI Stüdyo</span>
@@ -445,30 +437,27 @@
         </div>
 
         <div class="content-area">
-            <!-- 1. SOHBET EKRANI -->
             <div id="chatView" class="view-screen active" style="padding:0; display:flex; flex-direction:column; height:100%;">
                 <div class="chat-messages" id="chatMessages">
                     <div class="welcome-screen" id="welcomeScreen">
-                        <h1 id="welTitle">Merhaba, ben SytBot</h1>
-                        <p id="welDesc">Bugün sana nasıl yardımcı olabilirim? Görsel üretebilir, kod yazabilir veya e-postalarını yönetebilirim.</p>
+                        <h1 id="welTitle">Selam, ben SytBot!</h1>
+                        <p id="welDesc">Bugün ne yapmak istiyorsun? Kod yazabiliriz, tasarımlarına bakabiliriz ya da sadece sohbet edebiliriz.</p>
                         <div class="chips-container">
                             <div class="chip" onclick="sendPreset('Bana fütüristik bir şehir görseli çiz')">🎨 Siberpunk Şehir Çiz</div>
                             <div class="chip" onclick="sendPreset('Son gelen maillerimi özetle')">📧 Maillerimi Kontrol Et</div>
-                            <div class="chip" onclick="sendPreset('Python ile rastgele sayı üreten kod yaz')">💻 Python Kodu Yaz</div>
+                            <div class="chip" onclick="sendPreset('Naber nasılsın?')">💬 Naber, nasılsın?</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Yazma Alanı -->
                 <div class="input-container">
                     <div class="input-box">
-                        <textarea id="userInput" rows="1" placeholder="SytBot'a bir şeyler yaz veya görsel iste..." onkeydown="handleKey(event)"></textarea>
+                        <textarea id="userInput" rows="1" placeholder="SytBot'a bir şeyler yaz..." onkeydown="handleKey(event)"></textarea>
                         <button class="send-btn" onclick="sendMessage()">➤</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. PROFİL AYARLARI EKRANI -->
             <div id="profileView" class="view-screen">
                 <h2>Profil ve Kişiselleştirme</h2>
                 <div class="panel-card">
@@ -485,7 +474,6 @@
                 </div>
             </div>
 
-            <!-- 3. GMAIL ENTEGRASYONU EKRANI -->
             <div id="gmailView" class="view-screen">
                 <h2>Gmail Gelen Kutusu</h2>
                 <p style="color: var(--subtext-color); font-size: 13px;">SytBot tarafından analiz edilen son e-postalarınız:</p>
@@ -500,18 +488,12 @@
                         <span class="email-subject">Yeni cihazdan giriş yapıldı (iPad / Safari)</span>
                         <span style="font-size: 11px; color: var(--subtext-color);">1 saat önce</span>
                     </div>
-                    <div class="email-item">
-                        <span class="email-sender">Brawl Stars Team</span>
-                        <span class="email-subject">Yeni sezon güncellemeleri ve ödüller seni bekliyor!</span>
-                        <span style="font-size: 11px; color: var(--subtext-color);">Dün</span>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Çeviri Sözlüğü (4 Dil)
         const translations = {
             tr: {
                 newChat: "Yeni Sohbet",
@@ -519,10 +501,9 @@
                 profileMenu: "Profil Ayarları",
                 gmailMenu: "Gmail Entegrasyonu",
                 title: "SytBot AI Stüdyo",
-                welTitle: "Merhaba, ben SytBot",
-                welDesc: "Bugün sana nasıl yardımcı olabilirim? Görsel üretebilir, kod yazabilir veya e-postalarını yönetebilirim.",
-                placeholder: "SytBot'a bir şeyler yaz veya görsel iste...",
-                defaultBot: "Harika bir talep! Bunu senin için analiz ediyorum ve sistemimde işleme alıyorum. Başka nasıl yardımcı olabilirim?"
+                welTitle: "Selam, ben SytBot!",
+                welDesc: "Bugün ne yapmak istiyorsun? Kod yazabiliriz, tasarımlarına bakabiliriz ya da sadece sohbet edebiliriz.",
+                placeholder: "SytBot'a bir şeyler yaz..."
             },
             en: {
                 newChat: "New Chat",
@@ -530,32 +511,29 @@
                 profileMenu: "Profile Settings",
                 gmailMenu: "Gmail Integration",
                 title: "SytBot AI Studio",
-                welTitle: "Hello, I'm SytBot",
-                welDesc: "How can I help you today? I can generate images, write code, or manage your emails.",
-                placeholder: "Message SytBot or ask for an image...",
-                defaultBot: "Got it! I am processing this for you. What else can I assist you with?"
+                welTitle: "Hey, I'm SytBot!",
+                welDesc: "What do you want to do today? We can write code, check designs, or just chat.",
+                placeholder: "Message SytBot..."
             },
             es: {
                 newChat: "Nuevo Chat",
                 langLabel: "Selección de Idioma",
-                profileMenu: "Configuración de Perfil",
-                gmailMenu: "Integración de Gmail",
+                profileMenu: "Perfil",
+                gmailMenu: "Gmail",
                 title: "Estudio SytBot AI",
-                welTitle: "Hola, soy SytBot",
-                welDesc: "¿Cómo puedo ayudarte hoy? Puedo generar imágenes, escribir código o gestionar tus correos.",
-                placeholder: "Envía un mensaje a SytBot...",
-                defaultBot: "¡Entendido! Lo estoy procesando para ti. ¿En qué más puedo ayudarte?"
+                welTitle: "¡Hola, soy SytBot!",
+                welDesc: "¿Qué quieres hacer hoy? Podemos escribir código o chatear.",
+                placeholder: "Envía un mensaje..."
             },
             de: {
                 newChat: "Neuer Chat",
                 langLabel: "Sprachauswahl",
-                profileMenu: "Profileinstellungen",
-                gmailMenu: "Gmail-Integration",
+                profileMenu: "Profil",
+                gmailMenu: "Gmail",
                 title: "SytBot AI Studio",
-                welTitle: "Hallo, ich bin SytBot",
-                welDesc: "Wie kann ich dir helfen? Ich kann Bilder generieren, Code schreiben oder E-Mails verwalten.",
-                placeholder: "Schreibe SytBot...",
-                defaultBot: "Verstanden! Ich bearbeite das für dich. Wobei kann ich dir noch helfen?"
+                welTitle: "Hallo, ich bin SytBot!",
+                welDesc: "Was möchtest du heute tun? Wir können Code schreiben oder chatten.",
+                placeholder: "Schreibe SytBot..."
             }
         };
 
@@ -588,18 +566,14 @@
             document.getElementById('profileView').classList.remove('active');
             document.getElementById('gmailView').classList.remove('active');
 
-            if (viewName === 'chat') {
-                document.getElementById('chatView').classList.add('active');
-            } else if (viewName === 'profile') {
-                document.getElementById('profileView').classList.add('active');
-            } else if (viewName === 'gmail') {
-                document.getElementById('gmailView').classList.add('active');
-            }
+            if (viewName === 'chat') document.getElementById('chatView').classList.add('active');
+            else if (viewName === 'profile') document.getElementById('profileView').classList.add('active');
+            else if (viewName === 'gmail') document.getElementById('gmailView').classList.add('active');
         }
 
         function saveProfile() {
             let name = document.getElementById('profileName').value;
-            alert(`Profil başarıyla güncellendi! Hoş geldin, ${name}.`);
+            alert(`Kaydettim! Artık seni ${name} olarak tanıyorum.`);
             switchView('chat');
         }
 
@@ -625,36 +599,33 @@
 
             const messagesContainer = document.getElementById('chatMessages');
 
-            // Kullanıcı Mesajı
             const userMsg = document.createElement('div');
             userMsg.className = 'message user';
-            userMsg.innerHTML = `
-                <div class="avatar">S</div>
-                <div class="bubble">${escapeHtml(text)}</div>
-            `;
+            userMsg.innerHTML = `<div class="avatar">S</div><div class="bubble">${escapeHtml(text)}</div>`;
             messagesContainer.appendChild(userMsg);
             input.value = "";
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // SytBot Yanıtı Simülasyonu
+            // Doğal İnsan Gibi Yanıt Üretme Mantığı
             setTimeout(() => {
                 const botMsg = document.createElement('div');
                 botMsg.className = 'message bot';
                 
-                let botReplyContent = translations[currentLang].defaultBot;
-                
+                let reply = "";
                 const lower = text.toLowerCase();
-                if (lower.includes('görsel') || lower.includes('çiz') || lower.includes('image')) {
-                    botReplyContent = `İstediğin konsept görseli SytBot tarafından oluşturuldu:`;
-                    botReplyContent += `<br><img src="https://picsum.photos/400/250?random=${Math.floor(Math.random()*1000)}" alt="SytBot AI Art">`;
+
+                if (lower.includes('merhaba') || lower.includes('selam') || lower.includes('naber') || lower.includes('hi') || lower.includes('hello')) {
+                    reply = "Selam! Gayet iyiyim, projeler nasıl gidiyor? Sana bugün ne konuda yardım edebilirim?";
+                } else if (lower.includes('görsel') || lower.includes('çiz') || lower.includes('image')) {
+                    reply = `İstediğin konsepti görselleştirdim, umarım beğenirsin:<br><img src="https://picsum.photos/400/250?random=${Math.floor(Math.random()*1000)}" alt="SytBot AI Art">`;
                 } else if (lower.includes('mail') || lower.includes('gmail') || lower.includes('eposta')) {
-                    botReplyContent = `Gmail hesabını taradım: GitHub repolarının başarıyla yayınlandığına dair bildirimlerin var ve yeni bir güvenlik uyarısı tespit ettim. Detayları sol menüdeki **Gmail Entegrasyonu** sekmesinden inceleyebilirsin!`;
+                    reply = "Gelen kutuna şöyle bir göz attım; GitHub repolarının yayınlandığına dair bildirimler var. Detayları sol taraftaki Gmail menüsünden görebilirsin!";
+                } else {
+                    // Genel akıllı ve doğal yanıt simülasyonu
+                    reply = `Anladım, "${text}" konusuna odaklanabiliriz. Bununla ilgili detayları veya kodları hemen hazırlamamı ister misin?`;
                 }
 
-                botMsg.innerHTML = `
-                    <div class="avatar" style="background: #10a37f;">S</div>
-                    <div class="bubble">${botReplyContent}</div>
-                `;
+                botMsg.innerHTML = `<div class="avatar" style="background: #10a37f;">S</div><div class="bubble">${reply}</div>`;
                 messagesContainer.appendChild(botMsg);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }, 600);

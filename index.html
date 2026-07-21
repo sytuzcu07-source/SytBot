@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SytBot AI Stüdyosu</title>
+    <style>
+        :root {
+            --bg-color: #131314;
+            --sidebar-bg: #1e1f20;
+            --chat-bg: #131314;
+            --input-bg: #282a2c;
+            --text-color: #e3e3e3;
+            --subtext-color: #8e918f;
+            --primary-color: #8ab4f8;
+            --bot-bubble: #1e1f20;
+            --user-bubble: #2b2d31;
+            --border-color: #333537;
+        }
+
+        .light-mode {
+            --bg-color: #ffffff;
+            --sidebar-bg: #f0f4f9;
+            --chat-bg: #ffffff;
+            --input-bg: #f0f4f9;
+            --text-color: #1f1f1f;
+            --subtext-color: #5e5e5e;
+            --primary-color: #0b57d0;
+            --bot-bubble: #f0f4f9;
+            --user-bubble: #e9edf5;
+            --border-color: #d1d5db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Yan Menü (Sidebar) */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            border-right: 1px solid var(--border-color);
+            transition: background 0.3s;
+        }
+
+        .top-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .new-chat-btn {
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background: var(--border-color);
+        }
+
+        .settings-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .settings-group label {
+            font-size: 12px;
+            color: var(--subtext-color);
+        }
+
+        select, input {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 8px;
+            outline: none;
+            font-size: 13px;
+        }
+
+        /* Profil ve Gmail Butonları Bölümü */
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .menu-item-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .menu-item-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* Ana Sohbet Alanı */
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--chat-bg);
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* İçerik Ekranları (Sohbet / Profil / Gmail) */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .view-screen {
+            display: none;
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .view-screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Mesaj Akışı */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            max-width: 85%;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message.user .avatar {
+            background: #555;
+        }
+
+        .bubble {
+            background: var(--bot-bubble);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .message.user .bubble {
+            background: var(--user-bubble);
+        }
+
+        .bubble img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Karşılama Ekranı */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            gap: 15px;
+            color: var(--subtext-color);
+        }
+
+        .welcome-screen h1 {
+            color: var(--text-color);
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .chips-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .chip {
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chip:hover {
+            background: var(--border-color);
+        }
+
+        /* Profil ve Gmail Panelleri Tasarımı */
+        .panel-card {
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel-card h3 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+
+        .save-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .email-item {
+            background: var(--input-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .email-sender {
+            font-weight: bold;
+            font-size: 13px;
+            color: var(--primary-color);
+        }
+
+        .email-subject {
+            font-size: 14px;
+        }
+
+        /* Alt Girdi (Input) Paneli */
+        .input-container {
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .input-box {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            gap: 10px;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--primary-color);
+        }
+
+        .input-box textarea {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            max-height: 120px;
+            padding: 6px 0;
+            font-family: inherit;
+        }
+
+        .send-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .send-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Yan Menü -->
+    <div class="sidebar">
+        <div class="top-sidebar">
+            <button class="new-chat-btn" onclick="switchView('chat')">
+                <span>+</span> <span id="uiNewChat">Yeni Sohbet</span>
+            </button>
+            
+            <div class="settings-group">
+                <label id="uiLangLabel">Dil Seçimi / Language</label>
+                <select id="langSelect" onchange="changeLanguage()">
+                    <option value="tr">Türkçe</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+
+            <div class="sidebar-menu">
+                <button class="menu-item-btn" onclick="switchView('profile')">👤 <span id="uiProfileMenu">Profil Ayarları</span></button>
+                <button class="menu-item-btn" onclick="switchView('gmail')">📧 <span id="uiGmailMenu">Gmail Entegrasyonu</span></button>
+            </div>
+        </div>
+        
+        <div style="font-size: 11px; color: var(--subtext-color); text-align: center;" id="uiFooter">
+            SytBot AI v3.0 Stüdyo
+        </div>
+    </div>
+
+    <!-- Ana Ekran Alanı -->
+    <div class="main-chat">
+        <div class="chat-header">
+            <span id="uiHeaderTitle">SytBot AI Stüdyo</span>
+            <div class="header-controls">
+                <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir">🌙</button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- 1. SOHBET EKRANI -->
+            <div id="chatView" class="view-screen active" style="padding:0; display:flex; flex-direction:column; height:100%;">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-screen" id="welcomeScreen">
+                        <h1 id="welTitle">Merhaba, ben SytBot</h1>
+                        <p id="welDesc">Bugün sana nasıl yardımcı olabilirim? Görsel üretebilir, kod yazabilir veya e-postalarını yönetebilirim.</p>
+                        <div class="chips-container">
+                            <div class="chip" onclick="sendPreset('Bana fütüristik bir şehir görseli çiz')">🎨 Siberpunk Şehir Çiz</div>
+                            <div class="chip" onclick="sendPreset('Son gelen maillerimi özetle')">📧 Maillerimi Kontrol Et</div>
+                            <div class="chip" onclick="sendPreset('Python ile rastgele sayı üreten kod yaz')">💻 Python Kodu Yaz</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yazma Alanı -->
+                <div class="input-container">
+                    <div class="input-box">
+                        <textarea id="userInput" rows="1" placeholder="SytBot'a bir şeyler yaz veya görsel iste..." onkeydown="handleKey(event)"></textarea>
+                        <button class="send-btn" onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PROFİL AYARLARI EKRANI -->
+            <div id="profileView" class="view-screen">
+                <h2>Profil ve Kişiselleştirme</h2>
+                <div class="panel-card">
+                    <h3>Kullanıcı Bilgileri</h3>
+                    <div class="settings-group">
+                        <label>Adınız / Rumuzunuz</label>
+                        <input type="text" id="profileName" value="Kullanıcı">
+                    </div>
+                    <div class="settings-group">
+                        <label>E-posta Adresiniz</label>
+                        <input type="email" id="profileEmail" value="kullanici@gmail.com">
+                    </div>
+                    <button class="save-btn" onclick="saveProfile()">Bilgileri Kaydet</button>
+                </div>
+            </div>
+
+            <!-- 3. GMAIL ENTEGRASYONU EKRANI -->
+            <div id="gmailView" class="view-screen">
+                <h2>Gmail Gelen Kutusu</h2>
+                <p style="color: var(--subtext-color); font-size: 13px;">SytBot tarafından analiz edilen son e-postalarınız:</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <div class="email-item">
+                        <span class="email-sender">github.com &lt;noreply@github.com&gt;</span>
+                        <span class="email-subject">TaskFlow ve SytBot repolarınız başarıyla yayınlandı!</span>
+                        <span style="font-size: 11px; color: var(--subtext-color);">2 dakika önce</span>
+                    </div>
+                    <div class="email-item">
+                        <span class="email-sender">Google Security Alert</span>
+                        <span class="email-subject">Yeni cihazdan giriş yapıldı (iPad / Safari)</span>
+                        <span style="font-size: 11px; color: var(--subtext-color);">1 saat önce</span>
+                    </div>
+                    <div class="email-item">
+                        <span class="email-sender">Brawl Stars Team</span>
+                        <span class="email-subject">Yeni sezon güncellemeleri ve ödüller seni bekliyor!</span>
+                        <span style="font-size: 11px; color: var(--subtext-color);">Dün</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Çeviri Sözlüğü (4 Dil)
+        const translations = {
+            tr: {
+                newChat: "Yeni Sohbet",
+                langLabel: "Dil Seçimi / Language",
+                profileMenu: "Profil Ayarları",
+                gmailMenu: "Gmail Entegrasyonu",
+                title: "SytBot AI Stüdyo",
+                welTitle: "Merhaba, ben SytBot",
+                welDesc: "Bugün sana nasıl yardımcı olabilirim? Görsel üretebilir, kod yazabilir veya e-postalarını yönetebilirim.",
+                placeholder: "SytBot'a bir şeyler yaz veya görsel iste...",
+                defaultBot: "Harika bir talep! Bunu senin için analiz ediyorum ve sistemimde işleme alıyorum. Başka nasıl yardımcı olabilirim?"
+            },
+            en: {
+                newChat: "New Chat",
+                langLabel: "Language Selection",
+                profileMenu: "Profile Settings",
+                gmailMenu: "Gmail Integration",
+                title: "SytBot AI Studio",
+                welTitle: "Hello, I'm SytBot",
+                welDesc: "How can I help you today? I can generate images, write code, or manage your emails.",
+                placeholder: "Message SytBot or ask for an image...",
+                defaultBot: "Got it! I am processing this for you. What else can I assist you with?"
+            },
+            es: {
+                newChat: "Nuevo Chat",
+                langLabel: "Selección de Idioma",
+                profileMenu: "Configuración de Perfil",
+                gmailMenu: "Integración de Gmail",
+                title: "Estudio SytBot AI",
+                welTitle: "Hola, soy SytBot",
+                welDesc: "¿Cómo puedo ayudarte hoy? Puedo generar imágenes, escribir código o gestionar tus correos.",
+                placeholder: "Envía un mensaje a SytBot...",
+                defaultBot: "¡Entendido! Lo estoy procesando para ti. ¿En qué más puedo ayudarte?"
+            },
+            de: {
+                newChat: "Neuer Chat",
+                langLabel: "Sprachauswahl",
+                profileMenu: "Profileinstellungen",
+                gmailMenu: "Gmail-Integration",
+                title: "SytBot AI Studio",
+                welTitle: "Hallo, ich bin SytBot",
+                welDesc: "Wie kann ich dir helfen? Ich kann Bilder generieren, Code schreiben oder E-Mails verwalten.",
+                placeholder: "Schreibe SytBot...",
+                defaultBot: "Verstanden! Ich bearbeite das für dich. Wobei kann ich dir noch helfen?"
+            }
+        };
+
+        let currentLang = 'tr';
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            let t = translations[currentLang];
+            document.getElementById('uiNewChat').textContent = t.newChat;
+            document.getElementById('uiLangLabel').textContent = t.langLabel;
+            document.getElementById('uiProfileMenu').textContent = t.profileMenu;
+            document.getElementById('uiGmailMenu').textContent = t.gmailMenu;
+            document.getElementById('uiHeaderTitle').textContent = t.title;
+            const welTitle = document.getElementById('welTitle');
+            if(welTitle) welTitle.textContent = t.welTitle;
+            const welDesc = document.getElementById('welDesc');
+            if(welDesc) welDesc.textContent = t.welDesc;
+            document.getElementById('userInput').placeholder = t.placeholder;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggleBtn');
+            body.classList.toggle('light-mode');
+            btn.textContent = body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+
+        function switchView(viewName) {
+            document.getElementById('chatView').classList.remove('active');
+            document.getElementById('profileView').classList.remove('active');
+            document.getElementById('gmailView').classList.remove('active');
+
+            if (viewName === 'chat') {
+                document.getElementById('chatView').classList.add('active');
+            } else if (viewName === 'profile') {
+                document.getElementById('profileView').classList.add('active');
+            } else if (viewName === 'gmail') {
+                document.getElementById('gmailView').classList.add('active');
+            }
+        }
+
+        function saveProfile() {
+            let name = document.getElementById('profileName').value;
+            alert(`Profil başarıyla güncellendi! Hoş geldin, ${name}.`);
+            switchView('chat');
+        }
+
+        function sendPreset(text) {
+            document.getElementById('userInput').value = text;
+            sendMessage();
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const welcome = document.getElementById('welcomeScreen');
+            if (welcome) welcome.remove();
+
+            const messagesContainer = document.getElementById('chatMessages');
+
+            // Kullanıcı Mesajı
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerHTML = `
+                <div class="avatar">S</div>
+                <div class="bubble">${escapeHtml(text)}</div>
+            `;
+            messagesContainer.appendChild(userMsg);
+            input.value = "";
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // SytBot Yanıtı Simülasyonu
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                let botReplyContent = translations[currentLang].defaultBot;
+                
+                const lower = text.toLowerCase();
+                if (lower.includes('görsel') || lower.includes('çiz') || lower.includes('image')) {
+                    botReplyContent = `İstediğin konsept görseli SytBot tarafından oluşturuldu:`;
+                    botReplyContent += `<br><img src="https://picsum.photos/400/250?random=${Math.floor(Math.random()*1000)}" alt="SytBot AI Art">`;
+                } else if (lower.includes('mail') || lower.includes('gmail') || lower.includes('eposta')) {
+                    botReplyContent = `Gmail hesabını taradım: GitHub repolarının başarıyla yayınlandığına dair bildirimlerin var ve yeni bir güvenlik uyarısı tespit ettim. Detayları sol menüdeki **Gmail Entegrasyonu** sekmesinden inceleyebilirsin!`;
+                }
+
+                botMsg.innerHTML = `
+                    <div class="avatar" style="background: #10a37f;">S</div>
+                    <div class="bubble">${botReplyContent}</div>
+                `;
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 600);
+        }
+
+        function escapeHtml(string) {
+            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>
